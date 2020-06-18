@@ -1,0 +1,94 @@
+{
+  "name": "nxgipd2mqtt",
+  "version": "0.1.0",
+  "slug": "nxgipd2mqtt",
+  "description": "Nxgipd to MQTT Bridge",
+  "auto_uart": true,
+  "url": "https://github.com/orgjvr/hassio-nxgipd2mqtt",
+  "startup": "before",
+  "arch": [
+    "aarch64",
+    "amd64",
+    "armv7",
+    "armhf",
+    "i386"
+  ],
+  "boot": "auto",
+  "map": [
+    "share:rw",
+    "config:rw", 
+    "ssl:rw"
+  ],
+  "ports": {
+    "8485/tcp": 8485
+  },
+  "ports_description": {
+    "8485/tcp": "Socat tcp-listen port"
+  },
+  "options": {
+    "data_path": "/share/nxgipd2mqtt",
+    "SerialDevice": "/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0",
+    "SerialBaud": 9600,
+    "SerialProtocol": "ascii",
+    "NumPartitions": 1,
+    "NumZones": 30,
+    "StatusCheckMinutes": 30,
+    "TimeSyncHours": 168,
+    "SysLogLevel": 2,
+    "LogFileLevel": 0,
+    "LogEntry": 2,
+    "PartitionStatus": 1,
+    "ZoneStatus": 1,
+    "MaxProcesses": 0,
+    "AlarmProgram": "/share/alarm-mqtt.sh",
+    "MqttHost": "localhost",
+    "MqttPort": 1883,
+    "MqttUser": "nxgipd",
+    "MqttPassword": "password",
+    "MqttBaseTopic": "nx584",
+    "MqttSSL": false
+    },
+    "socat": {
+      "enabled": false,
+      "master": "pty,raw,echo=0,link=/dev/ttyN2M,mode=777",
+      "slave": "tcp-listen:8485,keepalive,nodelay,reuseaddr,keepidle=1,keepintvl=1,keepcnt=5",
+      "restartdelay": 1,
+      "initialdelay": 1,
+      "options": "-d -d",
+      "log": false
+    }
+  },
+  "schema": {
+    "data_path": "str",
+    "SerialDevice": "str",
+    "SerialBaud": "int",
+    "SerialProtocol": "str",
+    "NumPartitions": "int",
+    "NumZones": "int",
+    "StatusCheckMinutes": "int",
+    "TimeSyncHours": "int",
+    "SysLogLevel": "int",
+    "LogFileLevel": "int",
+    "LogEntry": "int",
+    "PartitionStatus": "int",
+    "ZoneStatus": "int",
+    "MaxProcesses": "int",
+    "AlarmProgram": "str",
+    "MqttHost": "str",
+    "MqttPort": "int",
+    "MqttUser": "str",
+    "MqttPassword": "str",
+    "MqttBaseTopic": "str",
+    "MqttSSL": "bool",
+    "socat": {
+      "enabled": "bool?",
+      "master": "str?",
+      "slave": "str?",
+      "restartdelay": "float(0,)?",
+      "initialdelay": "float(0,)?",
+      "options": "str?",
+      "log": "bool?"
+    }
+  },
+  "image": "orgjvr/nxgipd2mqtt-{arch}"
+}
