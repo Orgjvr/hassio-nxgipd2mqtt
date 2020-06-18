@@ -56,8 +56,7 @@
       "initialdelay": 1,
       "options": "-d -d",
       "log": false
-    }
-  },
+    },
   "schema": {
     "data_path": "str",
     "SerialDevice": "str",
