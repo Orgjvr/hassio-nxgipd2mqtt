@@ -55,7 +55,7 @@ sed -i "s/%%LogEntry%%/$LogEntry/g" /etc/nxgipd.conf
 sed -i "s/%%PartitionStatus%%/$PartitionStatus/g" /etc/nxgipd.conf
 sed -i "s/%%ZoneStatus%%/$ZoneStatus/g" /etc/nxgipd.conf
 sed -i "s/%%MaxProcesses%%/$MaxProcesses/g" /etc/nxgipd.conf
-sed -i "s/%%AlarmProgram%%/$AlarmProgram/g" /etc/nxgipd.conf
+sed -i "s/%%AlarmProgram%%/${AlarmProgram//\//\\/}/g" /etc/nxgipd.conf
 
 
 
