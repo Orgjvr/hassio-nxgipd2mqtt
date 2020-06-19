@@ -16,16 +16,16 @@ RUN apk add --update --no-cache socat make build-base git mosquitto-clients ca-c
   cd "/${MXML_ARCHIVE}" && \
   ./configure && \
   make && \
-  make install && \
-  mkdir -p /nxgipd2mqtt && \
+  make install 
+RUN   mkdir -p /nxgipd2mqtt && \
   git clone https://github.com/orgjvr/nxgipd && \
   cd /nxgipd && \
   ./configure && \
   make && \
   make strip && \
   make install && \
-  cp nxgipd.conf.def /etc/nxgipd.conf && \
-  apk del make build-base && \
+  cp nxgipd.conf.def /etc/nxgipd.conf
+RUN   apk del make build-base && \
   rm -rf docs test images scripts data docker LICENSE README.md update.sh
 
 COPY run.sh "/run.sh"
