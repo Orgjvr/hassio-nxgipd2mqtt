@@ -1,46 +1,49 @@
 <div align="center">
-<img src="https://github.com/Koenkk/zigbee2mqtt/blob/master/images/logo.png?raw=true"/>
-<h1>Zigbee2mqtt Hass.io Add-on</h1>
+<img src="images/logo.png">
+<h1>Nxgipd2mqtt Hass.io Add-on</h1>
 <div style="display: flex; justify-content: center;">
-  <a style="margin-right: 0.5rem;" href="https://travis-ci.org/danielwelch/hassio-zigbee2mqtt">
-    <img src="https://img.shields.io/travis/danielwelch/hassio-zigbee2mqtt.svg?style=flat-square&logo=travis">
+  <a style="margin-right: 0.5rem;" href="https://dev.azure.com/orgjvr/hassio-nxgipd2mqtt/_build?definitionId=1&_a=summary">
+    <img src="https://img.shields.io/azure-devops/build/orgjvr/fdcd83e4-a36e-473f-80f8-6a1bd49fdb3a/1?label=build&logo=azure-pipelines&style=flat-square">
   </a>
-  <a style="margin-left: 0.5rem;" href="https://cloud.docker.com/u/dwelch2101/repository/docker/dwelch2101/zigbee2mqtt-armhf">
-    <img src="https://img.shields.io/docker/pulls/dwelch2101/zigbee2mqtt-armhf.svg?style=flat-square&logo=docker">
+  <a style="margin-left: 0.5rem;" href="https://cloud.docker.com/u/orgjvr/repository/docker/orgjvr/nxgipd2mqtt-armhf">
+    <img src="https://img.shields.io/docker/pulls/orgjvr/nxgipd2mqtt-armhf.svg?style=flat-square&logo=docker">
   </a>
 </div>
 <br>
-<p>Run Zigbee2mqtt as a Hass.io Add-on</p>
+<p>Run <a href="https://github.com/tjko/nxgipd">nxgipd</a> as a Hass.io Add-on with MQTT communication</p>
 </div>
 
-# WARNING! Breaking Changes Notice
-Once upgraded from 1.6.0 to 1.7.0 you cannot switch back to 1.6.0 when not having a backup of the database.db!
 
-If you upgrade from older versions: Version 1.5.1 contains breaking changes! See the documentation on https://github.com/danielwelch/hassio-zigbee2mqtt for more information. The breaking change is from 1.4 to 1.5.1+, therefore, if you have version 1.4 and you are upgrade the version, check the documentation.
+## Installation
 
-# Configuration
-The configuration closely mirrors that of `zigbee2mqtt` itself, with a couple of key differences:
-1. Hass.io requires add-on configuration in JSON format, rather than YAML. If you don't understand the difference, you can use a YAML-to-JSON converter.
-2. An additional top-level `data-path` option is required. Set this to the path where you would like the add-on to persist data. Defaults to `/share/zigbee2mqtt`. Note that both `config` and `share` directories are mapped into the container (read-write) and are available to you.
-3. If you are using groups or device-specific settings, you must use seperate files, and provide the paths to these files in their corresponding config options as described by the zigbee2mqtt docs. This is due to a limitation Hass.io places on nested config levels.
+Add the repository URL under **Supervisor (Hass.io) → Add-on Store** in your Home Assistant front-end:
 
-See the [zigbee2mqtt configuration docs](https://www.zigbee2mqtt.io/information/configuration.html) for a complete description of available options. If you're not sure if a new option is supported, check to see if it is included in this add-on's default configuration. If not, you can open an issue to add support for it.
+    https://github.com/orgjvr/hassio-orgjvr2mqtt
 
-# Notes
-- Depending on your configuration, the MQTT server config may need to include the port, typically `1883` or `8883` for SSL communications. For example, `mqtt://core-mosquitto:1883` for Hass.io's Mosquitto addon.
-- To find out which serial ports you have exposed go to **Supervisor (used to be Hass.io) > System > Host system > Hardware**
-- Please see this add-on's [documentation on GitHub](https://github.com/danielwelch/hassio-zigbee2mqtt#socat) for further add-on-specific information (using Socat, how to add support for new devices etc.).
+Click on Nxgipd2mqtt under the new repository and click on Install.
 
-# Additional Configuration Options
-- `network_key_string`  
-This setting can be used instead of the normal array in case you would like the network key to be read from the secrets file (strings can be read from the secrets file whereas arrays cannot). Please note that `network_key` still needs to be present in the configuration (arrays being mandatory), but it may just be an empty array (it will be overwritten by the contents of `network_key_string` anyway).
-- `ext_pan_id_string`  
-Extended PAN ID has only been implemented as a string setting instead of an array to allow it to be optional and to not break existing configurations (strings can be optional whereas arrays cannot).
 
-Examples:
-```yaml
-advanced:
-  network_key: []
-  network_key_string: '!secret zigbee2mqt_network_key'
-  ext_pan_id_string: '221, 221, 221, 221, 221, 221, 221, 221'
-```
+## Configuration
+
+Configure the add-on via your Home Assistant front-end under **Supervisor (Hass.io) → Dashboard → nxgipd2mqtt**.
+
+The configuration closely mirrors that of [nxgipd itself](https://github.com/tjko/nxgipd), with a couple of key differences:
+
+1. Hass.io requires add-on configuration in JSON format, rather than XML. 
+
+2. An additional top-level `data_path` option is required which defaults to `/share/nxgipd2mqtt`. This is the path where the add-on should persist the data. The path must be relative to the Home Assistant shared data directory (which is `/usr/share/hassio` for Hass.io). Note that both `config` and `share` directories are mapped into the container (read-write) and are available to you.
+
+
+### Serial Port Setting
+
+To find out which serial ports are available to the add-ons, go to **Supervisor (Hass.io) → System → Host system** and click on the "Hardware" button. 
+
+### MQTT Settings
+
+Depending on your configuration, the MQTT server config may need to include the port, typically `1883` or `8883` for SSL communications. For example, `mqtt://core-mosquitto:1883` for [Hass.io's Mosquitto addon](https://github.com/home-assistant/hassio-addons/blob/master/mosquitto/README.md).
+
+Ensure the user credentials specified under the `mqtt` section (`user` and `password`) are correct and have write access to the MQTT server. Additional [configuration is required](https://github.com/home-assistant/hassio-addons/tree/master/mosquitto#known-issues-and-limitations) when the `anonymous` option is enabled in the [Hass.io's Mosquitto addon](https://github.com/home-assistant/hassio-addons/blob/master/mosquitto/README.md).
+
+
+
+
