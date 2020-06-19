@@ -46,8 +46,7 @@
     "MqttUser": "nxgipd",
     "MqttPassword": "password",
     "MqttBaseTopic": "nx584",
-    "MqttSSL": false
-    },
+    "MqttSSL": false,
     "socat": {
       "enabled": false,
       "master": "pty,raw,echo=0,link=/dev/ttyN2M,mode=777",
