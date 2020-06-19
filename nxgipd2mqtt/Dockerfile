@@ -17,7 +17,8 @@ RUN apk add --update --no-cache socat make build-base git mosquitto-clients ca-c
   ./configure && \
   make && \
   make install 
-RUN   mkdir -p /nxgipd2mqtt && \
+RUN   mkdir -p /nxgipd && \
+  cd / && \
   git clone https://github.com/orgjvr/nxgipd && \
   cd /nxgipd && \
   ./configure && \
