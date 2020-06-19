@@ -89,5 +89,5 @@
       "log": "bool?"
     }
   },
-  "image": "orgjvr/nxgipd2mqtt-{arch}"
+  "wimage": "orgjvr/nxgipd2mqtt-{arch}"
 }
