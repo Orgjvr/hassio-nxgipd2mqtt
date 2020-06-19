@@ -20,7 +20,7 @@
     "ssl:rw"
   ],
   "ports": {
-    "8485/tcp": 8485
+    "8486/tcp": 8486
   },
   "ports_description": {
     "8485/tcp": "Socat tcp-listen port"
@@ -50,7 +50,7 @@
     "socat": {
       "enabled": false,
       "master": "pty,raw,echo=0,link=/dev/ttyN2M,mode=777",
-      "slave": "tcp-listen:8485,keepalive,nodelay,reuseaddr,keepidle=1,keepintvl=1,keepcnt=5",
+      "slave": "tcp-listen:8486,keepalive,nodelay,reuseaddr,keepidle=1,keepintvl=1,keepcnt=5",
       "restartdelay": 1,
       "initialdelay": 1,
       "options": "-d -d",
