@@ -32,6 +32,6 @@ COPY run.sh "/run.sh"
 COPY socat.sh "/socat.sh"
 WORKDIR /
 
-RUN ["chmod", "a+x", "./socat.sh"]
-RUN ["chmod", "a+x", "./run.sh"]
-CMD [ "run.sh" ]
+RUN ["chmod", "a+x", "/socat.sh"]
+RUN ["chmod", "a+x", "/run.sh"]
+CMD [ "/run.sh" ]
