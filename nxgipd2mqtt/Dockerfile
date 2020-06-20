@@ -43,5 +43,5 @@ RUN ["chmod", "a+x", "/run.sh"]
 RUN ["chmod", "a+x", "/listener.sh"]
 RUN ["chmod", "a+x", "/commander.sh"]
 #CMD [ "/run.sh" ]
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord  -c /etc/supervisor/conf.d/supervisord.conf"]
 
