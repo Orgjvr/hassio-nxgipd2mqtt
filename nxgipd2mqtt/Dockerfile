@@ -30,7 +30,7 @@ RUN   apk del make build-base && \
   rm -rf docs test images scripts data docker LICENSE README.md update.sh
 
 RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /supervisord.conf
 
 COPY run.sh "/run.sh"
 COPY socat.sh "/socat.sh"
@@ -43,5 +43,5 @@ RUN ["chmod", "a+x", "/run.sh"]
 RUN ["chmod", "a+x", "/listener.sh"]
 RUN ["chmod", "a+x", "/commander.sh"]
 #CMD [ "/run.sh" ]
-CMD ["/usr/bin/supervisord  -c /etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/usr/bin/supervisord -u root -c /supervisord.conf"]
 
