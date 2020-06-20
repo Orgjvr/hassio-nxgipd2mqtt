@@ -9,7 +9,7 @@ ENV ARCHIVE=nxgipd2mqtt-$NXGIPD2MQTT_VERSION
 ENV MXML_VERSION=2.9
 ENV MXML_ARCHIVE=mxml-${MXML_VERSION}
 
-RUN apk add --update --no-cache socat make build-base git mosquitto-clients ca-certificates && \
+RUN apk add --update --no-cache socat make build-base git mosquitto-clients ca-certificates supervisor && \
   curl -sL -o "/${MXML_ARCHIVE}.tar.gz" \
   "https://github.com/michaelrsweet/mxml/releases/download/release-${MXML_VERSION}/mxml-${MXML_VERSION}.tar.gz" && \
   tar xzvf "/${MXML_ARCHIVE}.tar.gz" && \
@@ -29,10 +29,19 @@ RUN   mkdir -p /nxgipd && \
 RUN   apk del make build-base && \
   rm -rf docs test images scripts data docker LICENSE README.md update.sh
 
+RUN mkdir -p /var/log/supervisor
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 COPY run.sh "/run.sh"
 COPY socat.sh "/socat.sh"
-WORKDIR /
 
+COPY listener.sh "/listener.sh"
+COPY commander.sh "/commander.sh"
+WORKDIR /
 RUN ["chmod", "a+x", "/socat.sh"]
 RUN ["chmod", "a+x", "/run.sh"]
-CMD [ "/run.sh" ]
+RUN ["chmod", "a+x", "/listener.sh"]
+RUN ["chmod", "a+x", "/commander.sh"]
+#CMD [ "/run.sh" ]
+CMD ["/usr/bin/supervisord"]
+
