@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bashio
 
 
-echo Hello world!
+echo "[Commander] `date` - Startup." >> /var/log/com.log
 
 CONFIG_PATH=/data/options.json
 
@@ -32,33 +32,39 @@ do
   aAction=`echo "$RAW_DATA" | jq -r .action`
   aCode=`echo "$RAW_DATA" | jq -r .code`
   aZone=`echo "$RAW_DATA" | jq -r .zone`
+  response=""
   if [ "$aAction" == "HOME" ]; then
     echo "Arming home"
-    nxcmd stay
+    response=`nxcmd stay`
   elif [ "$aAction" == "AWAY" ]; then
     echo "Arming away"
-    nxcmd exit
+    response=`nxcmd exit`
   elif [ "$aAction" == "DISARM" ]; then
     echo "Disarming with code $aCode"
-    echo $code | nxcmd disarm
+    response=`echo $aCode | nxcmd disarm`
   elif [ "$aAction" == "BYPASSZONE" ]; then
     echo "Toggling zone bypass: $aZone"
-    nxcmd zonebypass $aZone
+    response=`nxcmd zonebypass $aZone`
   elif [ "$aAction" == "BYPASS" ]; then
     echo "Enabling interior bypass"
-    nxcmd bypass
+    response=`nxcmd bypass`
   elif [ "$aAction" == "GRPBYPASS" ]; then
     echo "Enabling group bypass"
-    nxcmd grpbypass
+    response=`nxcmd grpbypass`
   elif [ "$aAction" == "STATUS" ]; then
     echo "Getting the status"
     aStatus=`nxstat -Z`
     echo $aStatus
     mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/stat -u $USER -P $PASS -m "$aStatus"
   fi
+  if [ "$response" != "" ]; then
+    mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/response -u $USER -P $PASS -m "$response"
+  fi
+  
 done
 
 bashio::log.info "[COMMANDER] Exiting... Problem?"
+echo "[Commander] `date` - Exiting... Problem?" >> /var/log/com.log
 
 #tail -f /dev/null
 
