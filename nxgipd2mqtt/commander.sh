@@ -8,9 +8,10 @@ ENABLELOGFILE=/share/nxgipd2mqtt/enablelog
 LOGFILE=/share/nxgipd2mqtt/commander.log
 MUSTLOG=0 
 
-if [[ -f "$FILE" ]]; then
-    echo "$FILE exists. Will do logging"
+if [[ -f "$ENABLELOGFILE" ]]; then
+    echo "$ENABLELOGFILE exists. Will do logging"
     MUSTLOG=1
+    echo "[Commander] `date` - Will enable logging to $LOGFILE" >> /var/log/com.log
 fi
 
 test $MUSTLOG -eq 1 && echo "[Commander] `date` - Startup." >> $LOGFILE
