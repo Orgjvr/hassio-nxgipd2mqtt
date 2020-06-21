@@ -69,7 +69,7 @@ do
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Getting the status." >> $LOGFILE
     aStatus=`nxstat -Z || echo`
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Status to follow:" >> $LOGFILE
-    test $MUSTLOG -eq 1 && $aStatus >> $LOGFILE
+    test $MUSTLOG -eq 1 && echo $aStatus >> $LOGFILE
     mosquitto_pub -h ${MqttHost} -p ${MqttPort}  -t ${MqttBaseTopic}/stat -u $MqttUser -P $MqttPassword -m "$aStatus"
   fi
   if [ "$response" != "" ]; then
