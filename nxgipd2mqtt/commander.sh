@@ -17,7 +17,7 @@ fi
 test $MUSTLOG -eq 1 && echo "[Commander] `date` - Startup." >> $LOGFILE
 
 bashio::log.info "[COMMANDER] Logging INFO from commander.sh file"
-test $MUSTLOG -eq 1 && echo "[Commander] `date` - Startup." >> $LOGFILE
+test $MUSTLOG -eq 1 && echo "[Commander] `date` - Logging INFO from commander.sh file." >> $LOGFILE
 
 ## Main ##
 
@@ -27,7 +27,7 @@ test $MUSTLOG -eq 1 && echo "[Commander] `date` - Startup." >> $LOGFILE
 
 
 bashio::log.info "[COMMANDER] Reading MQTT configuration"
-test $MUSTLOG -eq 1 && echo "[Commander] `date` - Startup." >> $LOGFILE
+test $MUSTLOG -eq 1 && echo "[Commander] `date` - Reading MQTT configuration." >> $LOGFILE
 
 MqttHost=$(bashio::config 'AlarmProg.MqttHost')
 MqttPort=$(bashio::config 'AlarmProg.MqttPort')
@@ -37,12 +37,12 @@ MqttBaseTopic=$(bashio::config 'AlarmProg.MqttBaseTopic')
 MqttSSL=$(bashio::config 'AlarmProg.MqttSSL')
 
 bashio::log.info "[COMMANDER] Starting the Subscription daemon"
-test $MUSTLOG -eq 1 && echo "[Commander] `date` - Startup." >> $LOGFILE
+test $MUSTLOG -eq 1 && echo "[Commander] `date` - Starting the Subscription daemon." >> $LOGFILE
 
 mosquitto_sub -R -h ${MqttHost} -p ${MqttPort}  -t ${MqttBaseTopic}/cmd -u $MqttUser -P $MqttPassword | while read RAW_DATA
 do
   echo "Got msg: $RAW_DATA" 
-  test $MUSTLOG -eq 1 && echo "[Commander] `date` - Startup." >> $LOGFILE
+  test $MUSTLOG -eq 1 && echo "[Commander] `date` - Got msg: $RAW_DATA." >> $LOGFILE
   aAction=`echo "$RAW_DATA" | jq -r .action`
   aCode=`echo "$RAW_DATA" | jq -r .code`
   aZone=`echo "$RAW_DATA" | jq -r .zone`
@@ -70,11 +70,11 @@ do
     aStatus=`nxstat -Z`
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Status to follow:" >> $LOGFILE
     test $MUSTLOG -eq 1 && $aStatus >> $LOGFILE
-    mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/stat -u $USER -P $PASS -m "$aStatus"
+    mosquitto_pub -h ${MqttHost} -p ${MqttPort}  -t ${MqttBaseTopic}/stat -u $MqttUser -P $MqttPassword -m "$aStatus"
   fi
   if [ "$response" != "" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Sending response via MQTT: [$response]." >> $LOGFILE
-    mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/response -u $USER -P $PASS -m "$response"
+    mosquitto_pub -h ${MqttHost} -p ${MqttPort}  -t ${MqttBaseTopic}/response -u $MqttUser -P $MqttPassword -m "$response"
   fi
   
 done
