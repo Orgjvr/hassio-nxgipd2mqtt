@@ -49,25 +49,25 @@ do
   response=""
   if [ "$aAction" == "HOME" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Arming home." >> $LOGFILE
-    response=`nxcmd stay`
+    response=`nxcmd stay || echo`
   elif [ "$aAction" == "AWAY" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Arming away." >> $LOGFILE
-    response=`nxcmd exit`
+    response=`nxcmd exit || echo`
   elif [ "$aAction" == "DISARM" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Disarming with code $aCode" >> $LOGFILE
-    response=`echo $aCode | nxcmd disarm`
+    response=`echo $aCode | nxcmd disarm || echo`
   elif [ "$aAction" == "BYPASSZONE" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Toggling zone bypass: $aZone" >> $LOGFILE
-    response=`nxcmd zonebypass $aZone`
+    response=`nxcmd zonebypass $aZone || echo`
   elif [ "$aAction" == "BYPASS" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Enabling interior bypass." >> $LOGFILE
-    response=`nxcmd bypass`
+    response=`nxcmd bypass || echo`
   elif [ "$aAction" == "GRPBYPASS" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Enabling group bypass." >> $LOGFILE
-    response=`nxcmd grpbypass`
+    response=`nxcmd grpbypass || echo`
   elif [ "$aAction" == "STATUS" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Getting the status." >> $LOGFILE
-    aStatus=`nxstat -Z`
+    aStatus=`nxstat -Z || echo`
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Status to follow:" >> $LOGFILE
     test $MUSTLOG -eq 1 && $aStatus >> $LOGFILE
     mosquitto_pub -h ${MqttHost} -p ${MqttPort}  -t ${MqttBaseTopic}/stat -u $MqttUser -P $MqttPassword -m "$aStatus"
