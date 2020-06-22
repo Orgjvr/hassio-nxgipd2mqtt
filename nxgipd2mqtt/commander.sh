@@ -89,7 +89,7 @@ do
     response=`nxcmd smokereset || echo`
   elif [ "$aAction" == "X10" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Send X-10 Message or Command: House<${aHouse}> Unit<${aUnit}> Function<${aFunc}>" >> $LOGFILE
-    if [ $aHouse != "" && $aUnit != "" && $aFunc != "" ]; then  
+    if [ $aHouse != "" ] && [ $aUnit != "" ] && [ $aFunc != "" ]; then  
       response=`nxcmd x10 $aHouse $aUnit $aFunc || echo`
     else
       response="Missing house/unit/func parameter"
