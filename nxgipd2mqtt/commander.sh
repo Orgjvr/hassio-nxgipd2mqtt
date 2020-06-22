@@ -45,7 +45,13 @@ do
   test $MUSTLOG -eq 1 && echo "[Commander] `date` - Got msg: $RAW_DATA." >> $LOGFILE
   aAction=`echo "$RAW_DATA" | jq -r .action`
   aCode=`echo "$RAW_DATA" | jq -r .code`
+  aPartition=`echo "$RAW_DATA" | jq -r .partition`
   aZone=`echo "$RAW_DATA" | jq -r .zone`
+  aHouse=`echo "$RAW_DATA" | jq -r .x10.house`
+  aUnit=`echo "$RAW_DATA" | jq -r .x10.unit`
+  aFunc=`echo "$RAW_DATA" | jq -r .x10.func`
+  test $aPartition != "" && test $aPartition -lt 9 && test $aPartition -gt 1 && echo "Valid Partition" || aPartition=1
+   
   response=""
   if [ "$aAction" == "HOME" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Arming home." >> $LOGFILE
@@ -59,12 +65,43 @@ do
   elif [ "$aAction" == "BYPASSZONE" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Toggling zone bypass: $aZone" >> $LOGFILE
     response=`nxcmd zonebypass $aZone || echo`
+  elif [ "$aAction" == "CHIME" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Toggling CHIME." >> $LOGFILE
+    response=`nxcmd chime || echo`
   elif [ "$aAction" == "BYPASS" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Enabling interior bypass." >> $LOGFILE
     response=`nxcmd bypass || echo`
   elif [ "$aAction" == "GRPBYPASS" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Enabling group bypass." >> $LOGFILE
     response=`nxcmd grpbypass || echo`
+  elif [ "$aAction" == "SMOKERESET" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Smoke detector reset." >> $LOGFILE
+    response=`nxcmd smokereset || echo`
+  elif [ "$aAction" == "SOUNDER" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Start keypad sounder." >> $LOGFILE
+    response=`nxcmd sounder || echo`
+  elif [ "$aAction" == "SETCLOCK" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Synchronize alarm clock with system clock." >> $LOGFILE
+    response=`nxcmd setclock || echo`
+  elif [ "$aAction" == "SMOKERESET" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Smoke detector reset." >> $LOGFILE
+    response=`nxcmd smokereset || echo`
+  elif [ "$aAction" == "X10" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Send X-10 Message or Command: House<${aHouse}> Unit<${aUnit}> Function<${aFunc}>" >> $LOGFILE
+    if [ $aHouse != "" && $aUnit != "" && $aFunc != "" ]; then  
+      response=`nxcmd x10 $aHouse $aUnit $aFunc || echo`
+    else
+      response="Missing house/unit/func parameter"
+    fi
+  elif [ "$aAction" == "SILENCE" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Turn off any sounder or alarm with code $aCode" >> $LOGFILE
+    response=`echo $aCode | nxcmd silence || echo`
+  elif [ "$aAction" == "CANCEL" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Cancel alarm with code $aCode" >> $LOGFILE
+    response=`echo $aCode | nxcmd cancel || echo`
+  elif [ "$aAction" == "AUTOARM" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Initiate auto-arm with code $aCode" >> $LOGFILE
+    response=`echo $aCode | nxcmd autoarm || echo`
   elif [ "$aAction" == "STATUS" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Getting the status." >> $LOGFILE
     aStatus=`nxstat -Z || echo`
