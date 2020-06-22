@@ -50,6 +50,7 @@ do
   aHouse=`echo "$RAW_DATA" | jq -r .x10.house`
   aUnit=`echo "$RAW_DATA" | jq -r .x10.unit`
   aFunc=`echo "$RAW_DATA" | jq -r .x10.func`
+  aSwitches=`echo "$RAW_DATA" | jq -r .switches`
   test $aPartition != "" && test $aPartition -lt 9 && test $aPartition -gt 1 && echo "Valid Partition" || aPartition=1
    
   response=""
@@ -103,8 +104,8 @@ do
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Initiate auto-arm with code $aCode" >> $LOGFILE
     response=`echo $aCode | nxcmd autoarm || echo`
   elif [ "$aAction" == "STATUS" ]; then
-    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Getting the status." >> $LOGFILE
-    aStatus=`nxstat -Z || echo`
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Getting the status with switches [${aSwitches}]." >> $LOGFILE
+    aStatus=`nxstat ${aSwitches} || echo`
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Status to follow:" >> $LOGFILE
     test $MUSTLOG -eq 1 && echo $aStatus >> $LOGFILE
     mosquitto_pub -h ${MqttHost} -p ${MqttPort}  -t ${MqttBaseTopic}/stat -u $MqttUser -P $MqttPassword -m "$aStatus"
