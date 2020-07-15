@@ -81,6 +81,29 @@ sed -i "s/%%MqttSSL%%/${MqttSSL}/g" /nxgipd/alarm-mqtt.sh
 bashio::log.info "Ensure log directory exists"
 mkdir -p $DataPath
 
+
+bashio::log.info "Register MQTT autodiscovery for Zones"
+
+#Loop for $NumPartitions
+for PARTITION in $(seq 1 ${NumPartitions})
+do
+	mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/nx584/p${PARTITION}ready/config" -m '{"n
+ame": "Partition '${PARTITION}' Ready", "uniq_id":"nx584p1ready", "device_class": "safety", "state_topic": "nx584/status/partition/P'${PARTITION}'", "pl_on": "0", "pl_off"
+: "1", "value_template": "{{ value_json.READY}}"}'
+done
+
+#Loop for $NumZones
+for ZONE in $(seq 1 ${NumZones})
+do
+#	echo "H=$ZONE"
+	mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/${MqttBaseTopic}/z${ZONE}fault/config" -m '{"name": "Zone '${ZONE}' Fault", "uniq_id":"nx584z'${ZONE}'fault", "device_class": "safety", "state_topic": "'${MqttBaseTopic}'/status/zone/Z'${ZONE}'", "pl_on": "1", "pl_off": "0", "value_template": "{{ value_json.ZONE_FAULT}}"}'
+
+	mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/${MqttBaseTopic}/z${ZONE}bypass/config" -m '{"name": "Zone '${ZONE}' Bypass", "uniq_id":"nx584z'${ZONE}'bypass", "device_class": "safety", "state_topic": "'${MqttBaseTopic}'/status/zone/Z'${ZONE}'", "pl_on": "1", "pl_off": "0", "value_template": "{{ value_json.ZONE_BYPASS}}"}'
+
+done
+
+
+
 bashio::log.info "Starting the daemon"
 nxgipd
 

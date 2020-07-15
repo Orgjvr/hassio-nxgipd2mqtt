@@ -89,19 +89,19 @@ do
     response=`nxcmd smokereset || echo`
   elif [ "$aAction" == "X10" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Send X-10 Message or Command: House<${aHouse}> Unit<${aUnit}> Function<${aFunc}>" >> $LOGFILE
-    if [ $aHouse != "" ] && [ $aUnit != "" ] && [ $aFunc != "" ]; then  
-      response=`nxcmd x10 $aHouse $aUnit $aFunc || echo`
+    if [ ${aHouse} != "" ] && [ ${aUnit} != "" ] && [ ${aFunc} != "" ]; then  
+      response=`nxcmd x10 ${aHouse} ${aUnit} ${aFunc} || echo`
     else
-      response="Missing house/unit/func parameter"
+      response="Missing house(${aHouse})/unit(${aUnit})/func(${aFunc}) parameter"
     fi
   elif [ "$aAction" == "SILENCE" ]; then
-    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Turn off any sounder or alarm with code $aCode" >> $LOGFILE
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Turn off any sounder or alarm with code ${aCode}" >> $LOGFILE
     response=`echo $aCode | nxcmd silence || echo`
   elif [ "$aAction" == "CANCEL" ]; then
-    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Cancel alarm with code $aCode" >> $LOGFILE
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Cancel alarm with code ${aCode}" >> $LOGFILE
     response=`echo $aCode | nxcmd cancel || echo`
   elif [ "$aAction" == "AUTOARM" ]; then
-    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Initiate auto-arm with code $aCode" >> $LOGFILE
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Initiate auto-arm with code ${aCode}" >> $LOGFILE
     response=`echo $aCode | nxcmd autoarm || echo`
   elif [ "$aAction" == "STATUS" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Getting the status with switches [${aSwitches}]." >> $LOGFILE
