@@ -102,9 +102,7 @@ bashio::log.info "Register MQTT autodiscovery for Zones"
 #Loop for $NumPartitions
 for PARTITION in $(seq 1 ${NumPartitions})
 do
-	mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/nx584/p${PARTITION}ready/config" -m '{"n
-ame": "Partition '${PARTITION}' Ready", "uniq_id":"nx584p'${PARTITION}'ready", "device_class": "safety", "state_topic": "nx584/status/partition/P'${PARTITION}'", "pl_on": "0", "pl_off"
-: "1", "value_template": "{{ value_json.READY}}"}'
+	mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/nx584/p${PARTITION}ready/config" -m '{"name": "Partition '${PARTITION}' Ready", "uniq_id":"nx584p'${PARTITION}'ready", "device_class": "safety", "state_topic": "nx584/status/partition/P'${PARTITION}'", "pl_on": "0", "pl_off": "1", "value_template": "{{ value_json.READY}}"}'
 done
 
 #Loop for $NumZones
