@@ -36,6 +36,9 @@ MqttPassword=$(bashio::config 'AlarmProg.MqttPassword')
 MqttBaseTopic=$(bashio::config 'AlarmProg.MqttBaseTopic')
 MqttSSL=$(bashio::config 'AlarmProg.MqttSSL')
 
+NumPartitions=$(bashio::config 'nxgipd.NumPartitions')
+NumZones=$(bashio::config 'nxgipd.NumZones')
+
 bashio::log.info "[COMMANDER] Starting the Subscription daemon"
 test $MUSTLOG -eq 1 && echo "[Commander] `date` - Starting the Subscription daemon." >> $LOGFILE
 
@@ -109,6 +112,24 @@ do
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Status to follow:" >> $LOGFILE
     test $MUSTLOG -eq 1 && echo $aStatus >> $LOGFILE
     mosquitto_pub -h ${MqttHost} -p ${MqttPort}  -t ${MqttBaseTopic}/stat -u $MqttUser -P $MqttPassword -m "$aStatus"
+  elif [ "$aAction" == "REGISTER" ]; then
+    test $MUSTLOG -eq 1 && echo "[Commander] `date` - Registering alarm via MQTT Autodiscovery" >> $LOGFILE
+    for ZONE in $(seq 1 ${NumZones})
+    do
+        #echo "Zone=$ZONE"
+        mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/${MqttBaseTopic}/z${ZONE}fault/config" -m '{"name": "Zone '${ZONE}' Fault", "uniq_id":"nx584z'${ZONE}'fault", "device_class": "safety", "state_topic": "'${MqttBaseTopic}'/status/zone/Z'${ZONE}'", "pl_on": "1", "pl_off": "0", "value_template": "{{ value_json.ZONE_FAULT}}"}'
+
+        mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/${MqttBaseTopic}/z${ZONE}bypass/config" -m '{"name": "Zone '${ZONE}' Bypass", "uniq_id":"nx584z'${ZONE}'bypass", "device_class": "safety", "state_topic": "'${MqttBaseTopic}'/status/zone/Z'${ZONE}'", "pl_on": "1", "pl_off": "0", "value_template": "{{ value_json.ZONE_BYPASS}}"}'
+
+    done
+
+    for PARTITION in $(seq 1 ${NumPartitions})
+    do
+        #echo "Partition=$PARTITION"
+        mosquitto_pub -h ${MqttHost} -p ${MqttPort} -u ${MqttUser} -P ${MqttPassword} -t "homeassistant/binary_sensor/nx584/p${PARTITION}ready/config" -m '{"name": "Partition '${PARTITION}' Ready", "uniq_id":"nx584p'${PARTITION}'ready", "device_class": "safety", "state_topic": "nx584/status/partition/P'${PARTITION}'", "pl_on": "0", "pl_off": "1", "value_template": "{{ value_json.READY}}"}'
+    done
+
+    response="MQTT Auto discovery messages sent"
   fi
   if [ "$response" != "" ]; then
     test $MUSTLOG -eq 1 && echo "[Commander] `date` - Sending response via MQTT: [$response]." >> $LOGFILE
