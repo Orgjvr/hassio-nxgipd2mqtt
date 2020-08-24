@@ -39,7 +39,7 @@ COPY listener.sh "/listener.sh"
 COPY commander.sh "/commander.sh"
 WORKDIR /
 RUN ["chmod", "a+x", "/socat.sh"]
-RUN ["chmod", "a+x", "/run.sh"]
+#RUN ["chmod", "a+x", "/run.sh"]
 RUN ["chmod", "a+x", "/listener.sh"]
 RUN ["chmod", "a+x", "/commander.sh"]
 #CMD [ "/run.sh" ]
