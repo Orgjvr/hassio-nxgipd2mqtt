@@ -95,8 +95,8 @@
     },
     "socat": {
       "enabled": "bool?",
-      "serverIP": "192.168.10.22",
-      "serverPort": 9000,
+      "serverIP": "str",
+      "serverPort": "int",
       "restartDelay": "float(0,)?",
       "initialDelay": "float(0,)?",
       "options": "str?",
