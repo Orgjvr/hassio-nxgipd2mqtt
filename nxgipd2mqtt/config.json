@@ -27,7 +27,7 @@
   },
   "options": {
     "nxgipd":{
-      "SerialDevice": "/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0",
+      "SerialDevice": "/dev/ttyN2M",
       "SerialBaud": 9600,
       "SerialProtocol": "ascii",
       "NumPartitions": 1,
@@ -37,17 +37,17 @@
       "SysLogLevel": 2,
       "LogFileLevel": 0,
       "LogEntry": 2,
-      "PartitionStatus": 1,
-      "ZoneStatus": 1,
+      "PartitionStatus": 2,
+      "ZoneStatus": 2,
       "MaxProcesses": 0,
       "DataPath": "/share/nxgipd2mqtt",
       "LogFilename": "nxgipd.log",
       "StatusFilename": "alarmstatus.xml",
       "StatusSaveInterval": 1440,
-      "AlarmProgram": "/nxgipd/alarm-mqtt.sh"
+      "AlarmProgram": "/n2m-alarm-mqtt.sh"
     },
     "AlarmProg":{
-      "MqttHost": "mqtthost",
+      "MqttHost": "192.168.10.5",
       "MqttPort": 1883,
       "MqttUser": "nxgipd",
       "MqttPassword": "password",
@@ -55,7 +55,7 @@
       "MqttSSL": false
     },
     "socat": {
-      "enabled": false,
+      "enabled": true,
       "serverIP": "192.168.10.22",
       "serverPort": 9000,
       "restartDelay": 1,

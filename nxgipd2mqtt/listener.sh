@@ -68,12 +68,14 @@ socatServerPort=$(bashio::config 'socat.serverPort')
 test $MUSTLOG -eq 1 && echo "[Listener] `date` - Setup socat" >> $LOGFILE                                 
 # FORK SOCAT IN A SEPARATE PROCESS IF ENABLED                                                             
 SOCAT_EXEC="socat"                                                                                        
-$SOCAT_CONFIG="pty,link=/dev/ttyN2M,waitslave,reuseaddr tcp:${socatServerIP}:${socatServerPort}"                    
+#SOCAT_CONFIG="pty,link=/dev/ttyN2M,waitslave,reuseaddr tcp:${socatServerIP}:${socatServerPort}"                    
+SOCAT_CONFIG="pty,link=/dev/ttyN2M,waitslave tcp:${socatServerIP}:${socatServerPort}"                    
 #TODO: I need to check if socat is running before creating again!!!!
 if pgrep -x "$SOCAT_EXEC" >/dev/null
 then
-	echo "socat still running. Use as is."
+	test $MUSTLOG -eq 1 && echo "[Listener] `date` - socat still running. Use as is." >> $LOGFILE  
 else
+	test $MUSTLOG -eq 1 && echo "[Listener] `date` - socat to be created: <${SOCAT_EXEC} ${SOCAT_CONFIG}>" >> $LOGFILE  
 	test ${socatEnabled} = true && $SOCAT_EXEC $SOCAT_CONFIG &                                             
 fi
 
