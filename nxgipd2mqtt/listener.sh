@@ -57,6 +57,18 @@ MqttPassword=$(bashio::config 'AlarmProg.MqttPassword')
 MqttBaseTopic=$(bashio::config 'AlarmProg.MqttBaseTopic')
 MqttSSL=$(bashio::config 'AlarmProg.MqttSSL')
 
+socatEnabled=$(bashio::config 'socat.enabled')                                                            
+socatServerIP=$(bashio::config 'socat.serverIP')                                                          
+socatServerPort=$(bashio::config 'socat.serverPort')                                                      
+                                                                                                          
+test $MUSTLOG -eq 1 && echo "[Listener] `date` - Setup socat" >> $LOGFILE                                 
+# FORK SOCAT IN A SEPARATE PROCESS IF ENABLED                                                             
+SOCAT_EXEC="socat"                                                                                        
+$SOCAT_CONFIG="pty,link=/dev/ttyN2M,waitslave,reuseaddr tcp:${socatServerIP}:${socatServerPort}"                    
+#TODO: I need to check if socat is running before creating again!!!!
+test ${socatEnabled} = true && $SOCAT_EXEC $SOCAT_CONFIG &                                             
+
+
 test $MUSTLOG -eq 1 && echo "[Listener] `date` - Setup NXGIPD configuration" >> $LOGFILE
 bashio::log.info "[Listener] Setup NXGIPD configuration"
 

@@ -56,10 +56,10 @@
     },
     "socat": {
       "enabled": false,
-      "master": "pty,raw,echo=0,link=/dev/ttyN2M,mode=777",
-      "slave": "tcp-listen:8486,keepalive,nodelay,reuseaddr,keepidle=1,keepintvl=1,keepcnt=5",
-      "restartdelay": 1,
-      "initialdelay": 1,
+      "serverIP": "192.168.10.22",
+      "serverPort": 9000,
+      "restartDelay": 1,
+      "initialDelay": 1,
       "options": "-d -d",
       "log": false
     }
@@ -95,10 +95,10 @@
     },
     "socat": {
       "enabled": "bool?",
-      "master": "str?",
-      "slave": "str?",
-      "restartdelay": "float(0,)?",
-      "initialdelay": "float(0,)?",
+      "serverIP": "192.168.10.22",
+      "serverPort": 9000,
+      "restartDelay": "float(0,)?",
+      "initialDelay": "float(0,)?",
       "options": "str?",
       "log": "bool?"
     }
