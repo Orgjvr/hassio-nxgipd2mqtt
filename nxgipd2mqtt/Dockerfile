@@ -4,7 +4,7 @@ FROM $BUILD_FROM
 # Add env
 ENV LANG C.UTF-8
 
-ENV NXGIPD2MQTT_VERSION=0.1.0
+ENV NXGIPD2MQTT_VERSION=0.1.1
 ENV ARCHIVE=nxgipd2mqtt-$NXGIPD2MQTT_VERSION
 ENV MXML_VERSION=2.9
 ENV MXML_ARCHIVE=mxml-${MXML_VERSION}
@@ -32,7 +32,7 @@ RUN   apk del make build-base && \
 RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /supervisord.conf
 
-COPY run.sh "/run.sh"
+COPY n2m-alarm-mqtt.sh.def "/n2m-alarm-mqtt.sh.def"
 COPY socat.sh "/socat.sh"
 
 COPY listener.sh "/listener.sh"
