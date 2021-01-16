@@ -54,6 +54,7 @@ StatusFilename=$(bashio::config 'nxgipd.StatusFilename')
 StatusSaveInterval=$(bashio::config 'nxgipd.StatusSaveInterval')
 AlarmProgram=$(bashio::config 'nxgipd.AlarmProgram')
 
+bashio::log.info "[Listener] Reading configuration AlarmProg"
 MqttHost=$(bashio::config 'AlarmProg.MqttHost')
 MqttPort=$(bashio::config 'AlarmProg.MqttPort')
 MqttUser=$(bashio::config 'AlarmProg.MqttUser')
@@ -61,7 +62,9 @@ MqttPassword=$(bashio::config 'AlarmProg.MqttPassword')
 MqttBaseTopic=$(bashio::config 'AlarmProg.MqttBaseTopic')
 MqttSSL=$(bashio::config 'AlarmProg.MqttSSL')
 TimeZone=$(bashio::config 'AlarmProg.TimeZone')
+bashio::log.info "[Listener] Timezone is ${TimeZone}"
 
+bashio::log.info "[Listener] Reading configuration Socat"
 socatEnabled=$(bashio::config 'socat.enabled')                                                            
 socatServerIP=$(bashio::config 'socat.serverIP')                                                          
 socatServerPort=$(bashio::config 'socat.serverPort')                                                      
