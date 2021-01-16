@@ -52,7 +52,8 @@
       "MqttUser": "nxgipd",
       "MqttPassword": "password",
       "MqttBaseTopic": "nx584",
-      "MqttSSL": false
+      "MqttSSL": false,
+      "TimeZone" : "Africa/Johannesburg"
     },
     "socat": {
       "enabled": true,
@@ -91,7 +92,8 @@
       "MqttUser": "str",
       "MqttPassword": "str",
       "MqttBaseTopic": "str",
-      "MqttSSL": "bool"
+      "MqttSSL": "bool",
+      "TimeZone": "str"
     },
     "socat": {
       "enabled": "bool?",
