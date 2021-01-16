@@ -1,6 +1,6 @@
 {
   "name": "nxgipd2mqtt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "slug": "nxgipd2mqtt",
   "description": "Nxgipd to MQTT Bridge",
   "auto_uart": true,
