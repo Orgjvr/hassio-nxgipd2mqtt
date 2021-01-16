@@ -118,7 +118,7 @@ sed -i "s/%%MqttUser%%/${MqttUser}/g" /n2m-alarm-mqtt.sh
 sed -i "s/%%MqttPassword%%/${MqttPassword}/g" /n2m-alarm-mqtt.sh
 sed -i "s/%%MqttBaseTopic%%/${MqttBaseTopic}/g" /n2m-alarm-mqtt.sh
 sed -i "s/%%MqttSSL%%/${MqttSSL}/g" /n2m-alarm-mqtt.sh
-sed -i "s/%%TimeZone%%/${TimeZone}/g" /n2m-alarm-mqtt.sh
+sed -i "s/%%TimeZone%%/${TimeZone//\//\\/}/g" /n2m-alarm-mqtt.sh
 
 test $MUSTLOG -eq 1 && echo "[Listener] `date` - Ensure log directory exists" >> $LOGFILE
 bashio::log.info "[Listener] Ensure log directory exists"
