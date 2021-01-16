@@ -18,7 +18,7 @@
 
 Add the repository URL under **Supervisor (Hass.io) → Add-on Store** in your Home Assistant front-end:
 
-    https://github.com/orgjvr/hassio-orgjvr2mqtt
+    https://github.com/orgjvr/hassio-nxgipd2mqtt
 
 The repository includes one add-on:
 
