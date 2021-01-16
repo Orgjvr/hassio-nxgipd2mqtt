@@ -59,19 +59,29 @@ USER=%%MqttUser%%
 PASS=%%MqttPassword%%
 BASETOPIC=%%MqttBaseTopic%%
 MQTTSSL=%%MqttSSL%%
+TZN2M=%%TimeZone%%
 
+EVENT_TS=`TZ=${TZN2M}; date +%X`
 
 case "${ALARM_EVENT_TYPE}" in
 
     zone)
 	mosquitto_pub -h ${HOST} -p ${PORT} -t ${BASETOPIC}/status/zone/Z${ALARM_EVENT_ZONE} -m "{\"ZONE\": $ALARM_EVENT_ZONE, \"ZONE_NAME\": \"$ALARM_EVENT_ZONE_NAME\", \"ZONE_FAULT\": $ALARM_EVENT_ZONE_FAULT, \"ZONE_TROUBLE\": $ALARM_EVENT_ZONE_TROUBLE, \"ZONE_TAMPER\": $ALARM_EVENT_ZONE_TAMPER, \"ZONE_BYPASS\": $ALARM_EVENT_ZONE_BYPASS, \"ZONE_ARMED\": $ALARM_EVENT_ZONE_ARMED}" -u $USER -P $PASS
 
+	if [ "$ALARM_EVENT_ZONE_ARMED" == "1" ]; then
+		if [ "${ALARM_EVENT_ZONE_FAULT}" == "1" ] || [ "${ALARM_EVENT_ZONE_TROUBLE}" == "1" ] || [ "${ALARM_EVENT_ZONE_TAMPER}" == "1" ]; then
+			mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/message -m "${ALARM_EVENT_ZONE_NAME}: ${ALARM_EVENT_STATUS} at ${EVENT_TS}" -u $USER -P $PASS
+	        fi
+        fi
 	;;
 
     partition)
 	mosquitto_pub -h ${HOST} -p ${PORT} -t ${BASETOPIC}/status/partition/P${ALARM_EVENT_PARTITION} -m "{\"PARTITION\": $ALARM_EVENT_PARTITION, \"ARMED\": $ALARM_EVENT_PARTITION_ARMED, \"READY\": $ALARM_EVENT_PARTITION_READY, \"STAY\": $ALARM_EVENT_PARTITION_STAY, \"CHIME\": $ALARM_EVENT_PARTITION_CHIME, \"ENTRY\": $ALARM_EVENT_PARTITION_ENTRY, \"EXIT\": $ALARM_EVENT_PARTITION_EXIT, \"ALARM\": $ALARM_EVENT_PARTITION_ALARM}" -u $USER -P $PASS
 	
 	if [ "$ALARM_EVENT_PARTITION_ARMED" == "1" ]; then
+		if [ "$ALARM_EVENT_PARTITION_ALARM" == "1" ]; then
+			mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/messageP -m "${ALARM_EVENT_PARTITION}: ${ALARM_EVENT_STATUS}" -u $USER -P $PASS
+	        fi
 		if [ "$ALARM_EVENT_PARTITION_EXIT" == "1" ]; then
         		mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/partition -m "arming" -u $USER -P $PASS
 		else
@@ -85,7 +95,6 @@ case "${ALARM_EVENT_TYPE}" in
 		mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/partition -m "disarmed" -u $USER -P $PASS
         fi
 	
-
 	;;
 
     log)
