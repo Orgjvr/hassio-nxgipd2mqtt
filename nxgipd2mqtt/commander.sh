@@ -142,5 +142,4 @@ bashio::log.info "[COMMANDER] Exiting... Problem?"
 test $MUSTLOG -eq 1 && echo "[Commander] `date` - Exiting... Problem?" >> $LOGFILE
 echo "[Commander] `date` - Exiting... Problem?" >> /var/log/com.log
 
-#tail -f /dev/null
 
