@@ -53,7 +53,7 @@
       "MqttPassword": "password",
       "MqttBaseTopic": "nx584",
       "MqttSSL": false,
-      "TimeZone" : "Africa/Johannesburg"
+      "TimeZone": "Africa/Johannesburg"
     },
     "socat": {
       "enabled": true,
