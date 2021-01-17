@@ -68,7 +68,7 @@ case "${ALARM_EVENT_TYPE}" in
     zone)
 	mosquitto_pub -h ${HOST} -p ${PORT} -t ${BASETOPIC}/status/zone/Z${ALARM_EVENT_ZONE} -m "{\"ZONE\": $ALARM_EVENT_ZONE, \"ZONE_NAME\": \"$ALARM_EVENT_ZONE_NAME\", \"ZONE_FAULT\": $ALARM_EVENT_ZONE_FAULT, \"ZONE_TROUBLE\": $ALARM_EVENT_ZONE_TROUBLE, \"ZONE_TAMPER\": $ALARM_EVENT_ZONE_TAMPER, \"ZONE_BYPASS\": $ALARM_EVENT_ZONE_BYPASS, \"ZONE_ARMED\": $ALARM_EVENT_ZONE_ARMED}" -u $USER -P $PASS
 
-	if [ "$ALARM_EVENT_ZONE_ARMED" == "1" ]; then
+	if [ "$ALARM_EVENT_ZONE_ARMED" == "1" ] && [ "$ALARM_EVENT_ZONE_BYPASS" == "0" ]; then
 		if [ "${ALARM_EVENT_ZONE_FAULT}" == "1" ] || [ "${ALARM_EVENT_ZONE_TROUBLE}" == "1" ] || [ "${ALARM_EVENT_ZONE_TAMPER}" == "1" ]; then
 			mosquitto_pub -h ${HOST} -p ${PORT}  -t ${BASETOPIC}/message -m "${ALARM_EVENT_ZONE_NAME}: ${ALARM_EVENT_STATUS} at ${EVENT_TS}" -u $USER -P $PASS
 	        fi
