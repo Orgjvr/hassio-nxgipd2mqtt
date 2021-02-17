@@ -73,7 +73,7 @@ test $MUSTLOG -eq 1 && echo "[Listener] `date` - Setup socat" >> $LOGFILE
 # FORK SOCAT IN A SEPARATE PROCESS IF ENABLED                                                             
 SOCAT_EXEC="socat"                                                                                        
 #SOCAT_CONFIG="pty,link=/dev/ttyN2M,waitslave,reuseaddr tcp:${socatServerIP}:${socatServerPort}"                    
-SOCAT_CONFIG="pty,link=/dev/ttyN2M,waitslave tcp:${socatServerIP}:${socatServerPort}"                    
+SOCAT_CONFIG="pty,link=${SerialDevice},waitslave tcp:${socatServerIP}:${socatServerPort}"                    
 #TODO: I need to check if socat is running before creating again!!!!
 if pgrep -x "$SOCAT_EXEC" >/dev/null
 then
