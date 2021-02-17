@@ -69,7 +69,7 @@ You can configure the socat module within the socat section using the following 
 - `initialdelay` delay (in seconds) to wait when the plugin is started before zigbee2mqtt is started (optional)
 - `restartdelay` delay (in seconds) to wait before a socat process is restarted when it has terminated (optional)
 
-**NOTE:** You'll have to change both the `master` and the `slave` options according to your needs. The defaults values will make sure that socat listens on port `8485` and redirects its output to `/dev/ttyNX2M`. The nxgipd2mqtt's serial.port setting is NOT automatically set and has to be changed accordingly.
+**NOTE:** You'll have to change both the `master` and the `slave` options according to your needs. The defaults values will make sure that socat listens on port `8485` and redirects its output to the config setting `SerialDevice`. Previously it defaulted to `/dev/ttyN2M`, but after a recent docker update I got a read-only `/dev` which was easiest to fix by moving the serial device to `/ttyN2M`. 
 
 ----
 ### Issues
