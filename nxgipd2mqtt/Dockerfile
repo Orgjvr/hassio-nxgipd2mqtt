@@ -9,7 +9,7 @@ ENV ARCHIVE=nxgipd2mqtt-$NXGIPD2MQTT_VERSION
 ENV MXML_VERSION=2.9
 ENV MXML_ARCHIVE=mxml-${MXML_VERSION}
 
-RUN apk add --update --no-cache socat make build-base git mosquitto-clients ca-certificates supervisor && \
+RUN apk add --update --no-cache socat make build-base git mosquitto-clients ca-certificates supervisor curl && \
   curl -sL -o "/${MXML_ARCHIVE}.tar.gz" \
   "https://github.com/michaelrsweet/mxml/releases/download/release-${MXML_VERSION}/mxml-${MXML_VERSION}.tar.gz" && \
   tar xzvf "/${MXML_ARCHIVE}.tar.gz" && \
